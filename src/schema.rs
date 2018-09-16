@@ -1,7 +1,7 @@
 table! {
     #[sql_name="lx_user"]
     user (id) {
-        id -> Unsigned<Integer>,
+        id -> Integer,
         name -> Varchar,
         nick_name -> Nullable<Varchar>,
         birthday -> Nullable<Date>,
@@ -13,8 +13,8 @@ table! {
 table! {
     #[sql_name="lx_user_auth"]
     user_auth (id) {
-        id -> Unsigned<Integer>,
-        user_id -> Unsigned<Integer>,
+        id -> Integer,
+        user_id -> Integer,
         identity_type -> Varchar,
         identifier -> Varchar,
         credential -> Varchar,
@@ -26,7 +26,7 @@ table! {
 table! {
     #[sql_name="lx_role"]
     role (id) {
-        id -> Unsigned<Integer>,
+        id -> Integer,
         name -> Varchar,
         desc -> Varchar,
         created_at -> Timestamp,
@@ -37,15 +37,15 @@ table! {
 table! {
     #[sql_name="lx_user_role"]
     user_role (user_id, role_id) {
-        user_id -> Unsigned<Integer>,
-        role_id -> Unsigned<Integer>,
+        user_id -> Integer,
+        role_id -> Integer,
     }
 }
 
 table! {
     #[sql_name="lx_class"]
     class (id) {
-        id -> Unsigned<Integer>,
+        id -> Integer,
         name -> Varchar,
         nick_name -> Nullable<Varchar>,
         created_at -> Timestamp,
@@ -56,15 +56,15 @@ table! {
 table! {
     #[sql_name="lx_user_class"]
     user_class (user_id, class_id) {
-        user_id -> Unsigned<Integer>,
-        class_id -> Unsigned<Integer>,
+        user_id -> Integer,
+        class_id -> Integer,
     }
 }
 
 table! {
     #[sql_name="lx_activitie"]
     activities (id) {
-        id -> Unsigned<Integer>,
+        id -> Integer,
         title -> Varchar,
         active -> Bool,
         form -> Jsonb,
@@ -76,8 +76,8 @@ table! {
 table! {
     #[sql_name="lx_user_activitie"]
     user_activities (user_id, activities_id) {
-        user_id -> Unsigned<Integer>,
-        activities_id -> Unsigned<Integer>,
+        user_id -> Integer,
+        activities_id -> Integer,
         data -> Jsonb,
         created_at -> Timestamp,
         updated_at -> Nullable<Timestamp>,
@@ -87,7 +87,7 @@ table! {
 table! {
     #[sql_name="lx_message"]
     messages (id) {
-        id -> Unsigned<Integer>,
+        id -> Integer,
         title -> Varchar,
         content -> Varchar,
         msg_type -> Varchar,

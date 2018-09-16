@@ -15,9 +15,9 @@ extern crate chrono;
 extern crate env_logger;
 extern crate mime;
 extern crate r2d2;
-extern crate r2d2_diesel;
 extern crate serde;
 extern crate serde_json;
+extern crate toml;
 
 mod db;
 mod state;
@@ -28,11 +28,14 @@ mod handler;
 mod middleware;
 mod model;
 mod schema;
+mod config;
 
 use actix::prelude::System;
 use actix_web::middleware::{ErrorHandlers, Logger, Response};
 use actix_web::{server, http, App, HttpRequest, HttpResponse, Result};
 use route::app_route;
+use config::Config;
+use state::AppState;
 
 fn render_500<S>(_: &HttpRequest<S>, resp: HttpResponse) -> Result<Response> {
     let mut builder = resp.into_builder();
@@ -42,20 +45,26 @@ fn render_500<S>(_: &HttpRequest<S>, resp: HttpResponse) -> Result<Response> {
 
 fn main() {
     env_logger::init();
-    let sys = System::new("lemon");
+
+    let config = Config::from_file("");
+    let sys = System::new("xin");
+
+    let state = AppState::new(config);
+
+    let server_url = config.serverConfig.to_string();
 
     // Start http server
     server::new(move || {
-        App::with_state(AppState{db: addr.clone()})
+        App::with_state(state.clone())
             // enable logger
             .middleware(Logger::default())
             .middleware(ErrorHandlers::new().handler(http::StatusCode::INTERNAL_SERVER_ERROR, render_500))
             .scope("", app_route)
-            .resource("/{name}", |r| r.method(http::Method::GET).with(index))
-    }).bind("127.0.0.1:8080")
+    }).bind(server_url)
         .unwrap()
         .start();
 
-    println!("Started http server: 127.0.0.1:8080");
+    info!("Started http server: {}", server_url);
+    
     let _ = sys.run();
 }
