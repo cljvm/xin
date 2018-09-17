@@ -1,19 +1,11 @@
-use actix_web::{Scope, http::Method, HttpRequest, FromRequest};
+use actix_web::{Scope, http::Method, State, FromRequest};
 
 use state::AppState;
-use controller::blog;
+use controller::admin;
 
-pub fn user_route<S: 'static>(scope: Scope<S>) -> Scope<S>
-    where HttpRequest<AppState>: FromRequest<S>
+pub fn admin_route<S: 'static>(scope: Scope<S>) -> Scope<S>
+    where State<AppState>: FromRequest<S>
 {
     scope
-        .route("/", Method::GET, blog::index::home)
-        .route("/article", Method::GET, blog::content::article_list)
-        .resource("/article/{name}", |r| {
-            r.name("article");
-            r.method(Method::GET).with(blog::content::content);
-        })
-        .route("/push", Method::GET, blog::push_message::push_message_list)
-        .route("/feed", Method::GET, blog::rss::rss)
-        .route("/{name}", Method::GET, blog::content::source)
+        .route("", Method::GET, admin::index)
 }

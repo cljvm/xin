@@ -1,16 +1,17 @@
 
-pub(crate) struct Error {
+pub struct Error {
 
 }
 
-pub(crate) struct ErrorMessage {
-    code: i32,
-    msg: String,
-    detail: String,
+#[derive(Serialize)]
+pub struct ErrorMessage {
+    pub code: i32,
+    pub msg: String,
+    pub detail: Option<String>,
 }
 
 impl Error {
-    fn database_connection_get_error() {
+    pub fn database_connection_get_error() {
         
     }
 }

@@ -1,10 +1,10 @@
 use std::thread;
 use diesel::prelude::PgConnection;
 use diesel::r2d2::{ConnectionManager, Pool, PooledConnection};
-use error::Error;
 use config::DbConfig;
 use actix::prelude::*;
 
+#[derive(Clone)]
 pub struct DbExecutor(pub Pool<ConnectionManager<PgConnection>>);
 
 pub type Conn = PooledConnection<ConnectionManager<PgConnection>>;
@@ -14,7 +14,7 @@ impl Actor for DbExecutor {
 }
 
 impl DbExecutor {
-    pub fn new(config: DbConfig) -> Result<DbExecutor> {
+    pub fn new(config: &DbConfig) -> DbExecutor {
         let database_url = config.to_string();
         let manager = ConnectionManager::<PgConnection>::new(database_url);
         let pool = Pool::builder()
@@ -33,7 +33,7 @@ impl DbExecutor {
         DbExecutor(pool)
     }
 
-    pub fn conn(&mut self) -> Result<Conn, Error> {
-        Ok(self.0.get().map_err(Error::database_connection_get_error)?)
+    pub fn conn(&mut self) -> Conn {
+        self.0.get().unwrap()
     }
 }

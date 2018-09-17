@@ -1,0 +1,16 @@
+[server]
+host="localhost"
+port=8090
+
+[db]
+protocal="postgres"
+user="lemon"
+password="lemon"
+host="localhost"
+port=5432
+database_name="lemondb"
+
+[email]
+user="wangshijia@git.com.cn"
+password="xxxxxxxx"
+nick_name="wangshijia"

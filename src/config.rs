@@ -1,38 +1,43 @@
+use failure::Error;
 use std::fmt;
 use std::fs::File;
+use std::io::prelude::*;
 use std::path::Path;
 use toml;
 
 #[derive(Deserialize)]
-pub(crate) struct Config {
+pub struct Config {
     pub server: ServerConfig,
     pub db: DbConfig,
     pub email: EmailConfig,
 }
 
-pub(crate) struct DbConfig {
+#[derive(Deserialize)]
+pub struct DbConfig {
     protocal: String,
     user: String,
     password: String,
-    url: String,
+    host: String,
     port: u16,
     database_name: String,
 }
 
-pub(crate) struct ServerConfig {
-    url: String,
+#[derive(Deserialize)]
+pub struct ServerConfig {
+    host: String,
     port: u16,
 }
 
-pub(crate) struct EmailConfig {
+#[derive(Deserialize)]
+pub struct EmailConfig {
     user: String,
     password: String,
     nick_name: String,
 }
 
 impl Config {
-    pub fn parse(content: &str) -> Result<Config> {
-        let mut config: Config = match toml::from_str(content) {
+    pub fn parse(content: &str) -> Result<Config, Error> {
+        let config: Config = match toml::from_str(content) {
             Ok(c) => c,
             Err(e) => bail!(e),
         };
@@ -40,13 +45,13 @@ impl Config {
         Ok(config)
     }
 
-    pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Config> {
+    pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Config, Error> {
         let mut content = String::new();
-        let path = path.as_ref();
-        let file_name = path.file_name().unwrap();
-        File::open(path)
-            .chain_err(|| format_err!("配置文件：{:?}不存在！", file_name))?
-            .read_to_string(&mut content)?;
+        // let path = path.as_ref();
+        // let file_name = path.file_name().unwrap();
+        File::open(path)?
+        // .chain_err(|| format_err!("配置文件：{:?}不存在！", file_name))?
+        .read_to_string(&mut content)?;
 
         Config::parse(&content)
     }
@@ -54,7 +59,7 @@ impl Config {
 
 impl fmt::Display for ServerConfig {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}:{}", self.url, self.port)
+        write!(f, "{}:{}", self.host, self.port)
     }
 }
 
@@ -64,12 +69,7 @@ impl fmt::Display for DbConfig {
         write!(
             f,
             "{}://{}:{}@{}:{}/{}",
-            self.protocal,
-            self.user,
-            self.password,
-            self.url,
-            self.port,
-            self.database_name
+            self.protocal, self.user, self.password, self.host, self.port, self.database_name
         )
     }
 }

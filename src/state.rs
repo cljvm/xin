@@ -3,17 +3,17 @@ use config::Config;
 use actix::prelude::*;
 
 
-pub(crate) struct AppState {
-    db: Addr<DbExecutor>,
+#[derive(Clone)]
+pub struct AppState {
+    pub db: Addr<DbExecutor>,
 }
 
 impl AppState {
-    pub fn new(config: Config) {
-        let db = DbExecutor.new(config.dbConfig);
+    pub fn new(config: &Config) -> AppState {
+        let db = DbExecutor::new(&config.db);
 
         let addr = SyncArbiter::start(3, move || {
-            let cloned = db.cloned();
-            DbExecutor(cloned)
+            db.clone()
         });
 
         AppState {db: addr}
