@@ -7,15 +7,14 @@ extern crate serde_derive;
 #[macro_use]
 extern crate failure;
 #[macro_use]
-extern crate tera;
-#[macro_use]
 extern crate log;
 
 extern crate actix;
 extern crate actix_web;
-extern crate futures;
 extern crate chrono;
 extern crate env_logger;
+extern crate futures;
+extern crate jsonwebtoken as jwt;
 extern crate mime;
 extern crate r2d2;
 extern crate serde;
@@ -24,28 +23,27 @@ extern crate toml;
 
 #[macro_use]
 pub mod macros;
-pub mod auth;
-pub mod config;
 pub mod controller;
-pub mod db;
+pub mod dal;
 pub mod error;
 pub mod handler;
 pub mod middleware;
-pub mod model;
 pub mod route;
-pub mod schema;
-pub mod state;
+pub mod util;
 
-use actix::prelude::System;
-use actix_web::middleware::{ErrorHandlers, Logger, Response};
-use actix_web::{http, server, App, HttpRequest, HttpResponse, Result};
-use config::Config;
+use actix::prelude::*;
+use actix_web::{
+    http::{header, StatusCode},
+    middleware::{ErrorHandlers, Logger, Response},
+    server, App, HttpRequest, HttpResponse, Result,
+};
+use util::config::Config;
 use route::app_route;
-use state::AppState;
+use util::state::AppState;
 
 fn render_500<S>(_: &HttpRequest<S>, resp: HttpResponse) -> Result<Response> {
     let mut builder = resp.into_builder();
-    builder.header(http::header::CONTENT_TYPE, "application/json");
+    builder.header(header::CONTENT_TYPE, "application/json");
     Ok(Response::Done(builder.into()))
 }
 
@@ -62,13 +60,12 @@ fn main() {
     // Start http server
     server::new(move || {
         App::with_state(state.clone())
-            // enable logger
             .middleware(Logger::default())
-            .middleware(ErrorHandlers::new().handler(http::StatusCode::INTERNAL_SERVER_ERROR, render_500))
-            .scope("", app_route)
+            .middleware(ErrorHandlers::new().handler(StatusCode::INTERNAL_SERVER_ERROR, render_500))
+            .configure(app_route)
     }).bind(&server_url)
-        .unwrap()
-        .start();
+    .unwrap()
+    .start();
 
     info!("Started http server: {}", &server_url);
 

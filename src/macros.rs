@@ -5,7 +5,7 @@ macro_rules! send_msg {
     };
     ($act:expr, $msg:expr, $fn:expr) => {
         $act.send($msg)
-            .from_err::<actix::MailboxError>()
+            .from_err::<MailboxError>()
             .and_then(|res| match res {
                 Ok(s) => $fn(s),
                 Err(_) => Ok(HttpResponse::InternalServerError().into()),

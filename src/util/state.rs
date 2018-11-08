@@ -1,7 +1,6 @@
-use db::DbExecutor;
-use config::Config;
+use dal::db::DbExecutor;
+use util::config::Config;
 use actix::prelude::*;
-
 
 #[derive(Clone)]
 pub struct AppState {

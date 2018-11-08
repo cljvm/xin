@@ -1,7 +1,7 @@
 
 use actix::prelude::*;
 use actix_web::Error;
-use db::DbExecutor;
+use dal::db::DbExecutor;
 use controller::Homepage;
 
 impl Handler<Homepage> for DbExecutor {

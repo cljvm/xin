@@ -1,7 +1,7 @@
 use std::thread;
 use diesel::prelude::PgConnection;
 use diesel::r2d2::{ConnectionManager, Pool, PooledConnection};
-use config::DbConfig;
+use util::config::DbConfig;
 use actix::prelude::*;
 
 #[derive(Clone)]

@@ -5,6 +5,7 @@ table! {
         name -> Varchar,
         nick_name -> Nullable<Varchar>,
         birthday -> Nullable<Date>,
+        email -> Nullable<Varchar>,
         created_at -> Timestamp,
         updated_at -> Nullable<Timestamp>,
     }

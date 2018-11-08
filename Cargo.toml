@@ -22,7 +22,6 @@ env_logger = "0.5"
 
 # des = "0.1.0"
 
-actix-web-httpauth = "0.1"
 chrono = { version = "^0.4.3", features = ["serde", "clock"] }
 http = "~0.1"
 failure = "~0.1"

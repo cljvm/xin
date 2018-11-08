@@ -1,1 +1,1 @@
-mod authenticate;
+pub mod auth;

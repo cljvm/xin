@@ -1,8 +1,8 @@
 use actix::prelude::*;
-use actix_web::{AsyncResponder, HttpResponse, Responder, State};
+use actix_web::{AsyncResponder, HttpResponse, Responder, HttpRequest};
 use futures::future::Future;
-use state::AppState;
+use util::state::AppState;
 
-pub fn index(state: State<AppState>) -> impl Responder {
-    send_msg!(state.db, super::Homepage {})
+pub fn index(req: HttpRequest<AppState>) -> impl Responder {
+    send_msg!(req.state().db, super::Homepage {})
 }
