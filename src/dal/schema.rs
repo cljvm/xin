@@ -1,96 +1,115 @@
 table! {
-    #[sql_name="lx_user"]
-    user (id) {
+    #[sql_name="lx_users"]
+    users (id) {
         id -> Integer,
-        name -> Varchar,
-        nick_name -> Nullable<Varchar>,
+        name -> Text,
+        nick_name -> Nullable<Text>,
+        email -> Nullable<Text>,
         birthday -> Nullable<Date>,
-        email -> Nullable<Varchar>,
+        height -> Nullable<SmallInt>,
+        weight -> Nullable<SmallInt>,
+        status -> SmallInt,
         created_at -> Timestamp,
         updated_at -> Nullable<Timestamp>,
     }
 }
 
 table! {
-    #[sql_name="lx_user_auth"]
-    user_auth (id) {
+    #[sql_name="lx_user_auths"]
+    user_auths (id) {
         id -> Integer,
         user_id -> Integer,
-        identity_type -> Varchar,
-        identifier -> Varchar,
-        credential -> Varchar,
+        identity_type -> Text,
+        identifier -> Text,
+        credential -> Text,
         created_at -> Timestamp,
         updated_at -> Nullable<Timestamp>,
     }
 }
 
 table! {
-    #[sql_name="lx_role"]
-    role (id) {
+    #[sql_name="lx_roles"]
+    roles (id) {
         id -> Integer,
-        name -> Varchar,
-        desc -> Varchar,
+        name -> Text,
+        desc -> Nullable<Text>,
         created_at -> Timestamp,
         updated_at -> Nullable<Timestamp>,
     }
 }
 
 table! {
-    #[sql_name="lx_user_role"]
-    user_role (user_id, role_id) {
-        user_id -> Integer,
+    #[sql_name="lx_roles_users"]
+    roles_users (id) {
+        id -> Integer,
         role_id -> Integer,
+        user_id -> Integer,
     }
 }
 
 table! {
-    #[sql_name="lx_class"]
-    class (id) {
+    #[sql_name="lx_classes"]
+    classes (id) {
         id -> Integer,
-        name -> Varchar,
-        nick_name -> Nullable<Varchar>,
+        name -> Text,
+        nick_name -> Nullable<Text>,
+        desc -> Nullable<Text>,
         created_at -> Timestamp,
         updated_at -> Nullable<Timestamp>,
     }
 }
 
 table! {
-    #[sql_name="lx_user_class"]
-    user_class (user_id, class_id) {
-        user_id -> Integer,
+    #[sql_name="lx_classes_users"]
+    users_classes (id) {
+        id -> Integer,
         class_id -> Integer,
+        user_id -> Integer,
     }
 }
 
 table! {
-    #[sql_name="lx_activitie"]
+    #[sql_name="lx_activities"]
     activities (id) {
         id -> Integer,
-        title -> Varchar,
-        active -> Bool,
-        form -> Jsonb,
+        title -> Text,
+        subject -> Text,
+        fields -> Jsonb,
+        content_raw -> Text,
+        content_html -> Text,
+        status -> SmallInt,
         created_at -> Timestamp,
         updated_at -> Nullable<Timestamp>,
     }
 }
 
 table! {
-    #[sql_name="lx_user_activitie"]
-    user_activities (user_id, activities_id) {
-        user_id -> Integer,
-        activities_id -> Integer,
-        data -> Jsonb,
-        created_at -> Timestamp,
-        updated_at -> Nullable<Timestamp>,
-    }
-}
-
-table! {
-    #[sql_name="lx_message"]
-    messages (id) {
+    #[sql_name="lx_activities_users"]
+    activities_users (id) {
         id -> Integer,
-        title -> Varchar,
-        content -> Varchar,
-        msg_type -> Varchar,
+        activitie_id -> Integer,
+        user_id -> Integer,
+        field1 -> Nullable<Text>,
+        field2 -> Nullable<Text>,
+        field3 -> Nullable<Text>,
+        field4 -> Nullable<Text>,
+        field5 -> Nullable<Text>,
+        field6 -> Nullable<Text>,
+        field7 -> Nullable<Text>,
+        field8 -> Nullable<Text>,
+        field9 -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+table! {
+    #[sql_name="lx_bulletins"]
+    bulletins (id) {
+        id -> Integer,
+        subject -> Text,
+        title -> Text,
+        content_raw -> Text,
+        content_html -> Text,
     }
 }

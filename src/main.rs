@@ -28,7 +28,7 @@ pub mod dal;
 pub mod error;
 pub mod handler;
 pub mod middleware;
-pub mod route;
+pub mod routes;
 pub mod util;
 
 use actix::prelude::*;
@@ -38,7 +38,7 @@ use actix_web::{
     server, App, HttpRequest, HttpResponse, Result,
 };
 use util::config::Config;
-use route::app_route;
+use routes::app_route;
 use util::state::AppState;
 
 fn render_500<S>(_: &HttpRequest<S>, resp: HttpResponse) -> Result<Response> {
